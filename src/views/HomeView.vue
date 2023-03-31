@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto" id="container_list">
     <div class="table-responsive flex flex-col justify-center align-middle">
-      <img alt="Vue logo" src="../assets/logo.png" width="200" height="200">
+      <img alt="Vue logo" src="../assets/logo.png" width="200" height="200" class="mx-auto">
       <table class="border-collapse table-fixed border border-green-800">
         <thead>
           <tr>

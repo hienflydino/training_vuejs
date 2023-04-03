@@ -17,7 +17,10 @@
                     type="text"
                     placeholder="Username"
                     v-model="user.name"
+                    @blur="validate()"
+                    v-bind:class="{ 'border-red-600': errors.name }"
                 />
+                <span class="text-red-600">{{ errors.name }}</span>
             </div>
             <div class="mb-4">
                 <label
@@ -32,7 +35,10 @@
                     type="email"
                     placeholder="Email"
                     v-model="user.email"
+                    @blur="validate()"
+                    v-bind:class="{ 'border-red-600': errors.email }"
                 />
+                <span class="text-red-600">{{ errors.email }}</span>
             </div>
             <div class="mb-6">
                 <label
@@ -47,7 +53,10 @@
                     type="password"
                     placeholder="******************"
                     v-model="user.password"
+                    @blur="validate()"
+                    v-bind:class="{ 'border-red-600': errors.password }"
                 />
+                <span class="text-red-600">{{ errors.password }}</span>
             </div>
             <div class="flex items-center justify-between">
                 <button
@@ -71,6 +80,11 @@ export default {
     name: "CreateForm",
     data() {
         return {
+            errors: {
+                name: "",
+                email: "",
+                password: "",
+            },
             user: {
                 name: "",
                 email: "",
@@ -80,10 +94,44 @@ export default {
     },
     methods: {
         validate() {
-          
+            let isValid = true;
+
+            this.errors = {
+                name: "",
+                email: "",
+                password: "",
+            };
+
+            if (!this.user.name) {
+                this.errors.name = "Name is required";
+                isValid = false;
+            }
+
+            if (!this.user.email) {
+                this.errors.email = "Email is required";
+                isValid = false;
+            }
+
+            if (!this.user.password) {
+                this.errors.password = "Password is required";
+                isValid = false;
+            }
+
+            return isValid;
         },
         save() {
-            console.log(this.user);
+            if (this.validate()) {
+                this.$request
+                    .post("http://127.0.0.1:8000/api/user", this.user)
+                    .then((res) => {
+                        if (res.data.success) {
+                            this.$router.push({ name: "home" });
+                            return;
+                        }
+
+                        alert("Failed to create");
+                    });
+            }
         },
     },
 };

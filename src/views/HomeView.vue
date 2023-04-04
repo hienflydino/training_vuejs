@@ -41,13 +41,15 @@
                             {{ formatTime(user.created_at) }}
                         </td>
                         <td class="border border-green-600 flex p-2">
-                            <button
+                            <router-link
                                 class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-1/2 mr-2"
+                                :to="{ name: 'edit', params: { id: user.id } }"
                             >
                                 Edit
-                            </button>
+                            </router-link>
                             <button
                                 class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-1/2"
+                                @click="onDelete(user.id)"
                             >
                                 Delete
                             </button>
@@ -80,6 +82,31 @@ export default {
         },
         formatTime(time) {
             return moment(time).format("MMMM Do YYYY, h:mm:ss a");
+        },
+        onDelete(id) {
+            this.$swal({
+                title: "Delete user?",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                denyButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.$request
+                        .delete(`http://127.0.0.1:8000/api/user/${id}`)
+                        .then((res) => {
+                            if (res.data.success) {
+                                this.$swal.fire("Deleted!", "", "success");
+                                this.getAllUsers();
+                            } else {
+                                this.$swal.fire(
+                                    "Something went wrong!!!",
+                                    "",
+                                    "info"
+                                );
+                            }
+                        });
+                }
+            });
         },
     },
 };

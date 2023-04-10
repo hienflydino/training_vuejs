@@ -152,7 +152,7 @@ export default {
                         )
                         .then((res) => {
                             if (res.data.success) {
-                                this.$router.push({ name: "edit" });
+                                this.$router.push({ name: "home" });
                                 this.$swal.fire({
                                     title: "Edited Success!!",
                                     width: 600,
@@ -181,7 +181,6 @@ export default {
                             if (res.data.success) {
                                 this.$router.push({
                                     name: "home",
-                                    params: { check: true },
                                 });
 
                                 this.$swal.fire({

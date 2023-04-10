@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-xs mx-auto">
+    <div class="w-full mx-auto min-h-screen bg-white dark:bg-black">
         <FormUser></FormUser>
     </div>
 </template>

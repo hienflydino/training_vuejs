@@ -1,11 +1,19 @@
 <template>
     <form
-        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        class="max-w-sm bg-white dark:bg-black shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto"
         @submit.prevent="save()"
     >
+        <div
+            class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-100 dark:bg-gray-800 dark:text-green-400"
+            role="alert"
+            v-if="check"
+        >
+            <span class="font-medium">Success alert!</span> Change a few things
+            up and try submitting again.
+        </div>
         <div class="mb-4">
             <label
-                class="block text-gray-700 text-sm font-bold mb-2"
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2 text-left"
                 for="username"
             >
                 Username
@@ -23,7 +31,7 @@
         </div>
         <div class="mb-4">
             <label
-                class="block text-gray-700 text-sm font-bold mb-2"
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2 text-left"
                 for="email"
             >
                 Email
@@ -41,7 +49,7 @@
         </div>
         <div class="mb-6">
             <label
-                class="block text-gray-700 text-sm font-bold mb-2"
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2 text-left"
                 for="password"
             >
                 Password
@@ -97,6 +105,7 @@ export default {
                 email: "",
                 password: "",
             },
+            check: false,
         };
     },
     created() {
@@ -143,10 +152,26 @@ export default {
                         )
                         .then((res) => {
                             if (res.data.success) {
-                                this.$router.push({ name: "home" });
+                                this.$router.push({ name: "edit" });
+                                this.$swal.fire({
+                                    title: "Edited Success!!",
+                                    width: 600,
+                                    padding: "3em",
+                                    color: "#716add",
+                                    background:
+                                        "#fff url(https://media2.giphy.com/media/26xBPapqZgN5M1KrC/giphy.gif?cid=ecf05e47dj60c6vl8uvb8r6zwe6ixj0y6hl9pjgnr7tkkark&rid=giphy.gif&ct=g)",
+                                    backdrop: `
+                                        rgba(0,0,123,0.4)
+                                        url("https://media2.giphy.com/media/GkD4U3VfiIbzcBhQNu/giphy.gif?cid=ecf05e472oe4m1yvqemu4ptyy6qg40a80fx6ydiyy8xp15kp&rid=giphy.gif&ct=g")
+                                        left top
+                                        no-repeat
+                                    `,
+                                });
+
                                 return;
                             }
 
+                            this.check = false;
                             alert("Failed to update");
                         });
                 } else {
@@ -154,11 +179,36 @@ export default {
                         .post("http://127.0.0.1:8000/api/user", this.user)
                         .then((res) => {
                             if (res.data.success) {
-                                this.$router.push({ name: "home" });
+                                this.$router.push({
+                                    name: "home",
+                                    params: { check: true },
+                                });
+
+                                this.$swal.fire({
+                                    title: "Created Success!!",
+                                    width: 600,
+                                    padding: "3em",
+                                    color: "#716add",
+                                    background:
+                                        "#fff url(https://media2.giphy.com/media/26xBPapqZgN5M1KrC/giphy.gif?cid=ecf05e47dj60c6vl8uvb8r6zwe6ixj0y6hl9pjgnr7tkkark&rid=giphy.gif&ct=g)",
+                                    backdrop: `
+                                        rgba(0,0,123,0.4)
+                                        url("https://media2.giphy.com/media/GkD4U3VfiIbzcBhQNu/giphy.gif?cid=ecf05e472oe4m1yvqemu4ptyy6qg40a80fx6ydiyy8xp15kp&rid=giphy.gif&ct=g")
+                                        left top
+                                        no-repeat
+                                    `,
+                                });
+
                                 return;
                             }
 
-                            alert("Failed to create");
+                            this.$swal.fire({
+                                position: "top-end",
+                                icon: "warning",
+                                title: "Created fail!!",
+                                showConfirmButton: false,
+                                timer: 3000,
+                            });
                         });
                 }
             }
